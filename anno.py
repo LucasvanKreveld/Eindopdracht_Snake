@@ -70,7 +70,7 @@ f.write("De gevaarlijke coördinaten zijn: " + str(gevarenzone))
 
 #doodlopende paden bepalen
 doodlopend = []
-doodlopend_2 = []
+doodlopend_permanent = []
 j = 0
 while j < level_breedte:
     doodlopend.append([])
@@ -99,7 +99,7 @@ def doodloopcheck(j,k):
             aantalhekjes += 1
         if aantalhekjes >= 3:
             doodlopend[j][k] = [j,k]
-            doodlopend_2.append([j,k])
+            doodlopend_permanent.append([j,k])
             doodloopcheck(j-1,k)
             doodloopcheck(j,k-1)
 
@@ -113,7 +113,7 @@ while j < level_breedte:
 #doodlopende paden bepalen            
         
 f.write("\n" )
-f.write("Doodlopende vakjes:" + str(doodlopend_2))
+f.write("Permanent doodlopende vakjes:" + str(doodlopend_permanent))
 
 eetmodus = 0
 turn = -1
@@ -142,6 +142,10 @@ while True:
        
     f.write("\n")
     f.write("De posities zijn " + str(posities[turn]) + ", mijn positie is " + str(positie))
+    
+    #scan voor deze beurt of er doodlopende paadjes zijn die eventueel door slangen zijn gemaakt
+    
+    
     
     #kijk voor deze beurt welke vakjes veilig zijn
     navigate = []
