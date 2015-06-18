@@ -84,7 +84,7 @@ def momenteel_doodloopcheck(j, k, level_hoogte, level_breedte, level, positie):
         aantal_obstakels = 0
         l=0
         while l < 4:
-            if omgeving_symbool[l] != "." and omgeving_symbool[l] != "x" and omgeving_coordinaten[l] != str(positie):
+            if omgeving_symbool[l] != "." and omgeving_symbool[l] != "x" and str(omgeving_coordinaten[l]) != str(positie):
                 aantal_obstakels += 1
             l += 1
         if doodlopend_momenteel_lijst[(j-1) % level_breedte][k] == [j-1,k]:
