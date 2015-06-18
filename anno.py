@@ -1,6 +1,8 @@
 #!/bin/python
 import random
 import copy
+from deadend import *
+
 
 f = open("anno.txt", 'w')
 
@@ -71,49 +73,10 @@ f.write("De gevaarlijke coördinaten zijn: " + str(gevarenzone))
 #doodlopende paden bepalen
 doodlopend = []
 doodlopend_permanent = []
-j = 0
-while j < level_breedte:
-    doodlopend.append([])
-    k = 0
-    while k < level_hoogte:
-        doodlopend[j].append(0)
-        k += 1
-    j += 1
-    
-def doodloopcheck(j,k):
-    if doodlopend[j][k] == 0 and level[k][j] != '#':
-        omgeving = [level[(k+1) % level_hoogte][j] , level[(k-1) % level_hoogte][j] , level[k][(j+1) % level_breedte] , level[k][(j-1) % level_breedte]]
-        aantalhekjes = 0
-        l=0
-        while l < 4:
-            if omgeving[l] == "#":
-                aantalhekjes += 1
-            l += 1
-        if doodlopend[(j-1) % level_breedte][k] == [j-1,k]:
-            aantalhekjes += 1
-        if doodlopend[j][(k-1) % level_hoogte] == [j,k-1]:
-            aantalhekjes += 1
-        if doodlopend[(j+1) % level_breedte][k] == [j+1,k]:
-            aantalhekjes += 1
-        if doodlopend[j][(k+1) % level_hoogte] == [j,k+1]:
-            aantalhekjes += 1
-        if aantalhekjes >= 3:
-            doodlopend[j][k] = [j,k]
-            doodlopend_permanent.append([j,k])
-            doodloopcheck(j-1,k)
-            doodloopcheck(j,k-1)
+permanent_doodloopcheck_veld(j, k, level_breedte, level_hoogte, level, f)
 
-j = 0
-while j < level_breedte:
-    k = 0
-    while k < level_hoogte:
-        doodloopcheck(j,k)
-        k += 1
-    j += 1
-#doodlopende paden bepalen            
-        
-f.write("\n" )
-f.write("Permanent doodlopende vakjes:" + str(doodlopend_permanent))
+
+
 
 eetmodus = 0
 turn = -1
@@ -144,8 +107,9 @@ while True:
     f.write("De posities zijn " + str(posities[turn]) + ", mijn positie is " + str(positie))
     
     #scan voor deze beurt of er doodlopende paadjes zijn die eventueel door slangen zijn gemaakt
-    
-    
+    doodlopend_momenteel_lijst = []
+    doodlopend_momenteel_weergave = []
+    momenteel_doodloopcheck_veld(level_breedte, level_hoogte, level, positie, f)
     
     #kijk voor deze beurt welke vakjes veilig zijn
     navigate = []
