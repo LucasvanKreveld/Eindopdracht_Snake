@@ -371,6 +371,8 @@ while True:
         while h < level_hoogte:
             b = 0 
             while b < level_breedte:
+                if [b,h] in posities[turn][j]:
+                    level[h][b] = "."
                 if [b,h] in posities[turn + 1][j]:
                     level[h][b] = str(j)
                 b += 1
