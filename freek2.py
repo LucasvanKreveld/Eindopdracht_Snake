@@ -1,10 +1,8 @@
 #!/bin/python
 import random
 import copy
-from deadend import *
 
-
-f = open("anno.txt", 'w')
+f = open("freek.txt", 'w')
 
 ###Initialisatie
 # We lezen het doolhof en beginposities in
@@ -72,15 +70,56 @@ f.write("De gevaarlijke coördinaten zijn: " + str(gevarenzone))
 
 #doodlopende paden bepalen
 doodlopend = []
-doodlopend_permanent = []
-permanent_doodloopcheck_veld(j, k, level_breedte, level_hoogte, level, f)
+doodlopend_2 = []
+j = 0
+while j < level_breedte:
+    doodlopend.append([])
+    k = 0
+    while k < level_hoogte:
+        doodlopend[j].append(0)
+        k += 1
+    j += 1
+    
+def doodloopcheck(j,k):
+    if doodlopend[j][k] == 0 and level[k][j] != '#':
+        omgeving = [level[(k+1) % level_hoogte][j] , level[(k-1) % level_hoogte][j] , level[k][(j+1) % level_breedte] , level[k][(j-1) % level_breedte]]
+        aantalhekjes = 0
+        l=0
+        while l < 4:
+            if omgeving[l] == "#":
+                aantalhekjes += 1
+            l += 1
+        if doodlopend[(j-1) % level_breedte][k] == [j-1,k]:
+            aantalhekjes += 1
+        if doodlopend[j][(k-1) % level_hoogte] == [j,k-1]:
+            aantalhekjes += 1
+        if doodlopend[(j+1) % level_breedte][k] == [j+1,k]:
+            aantalhekjes += 1
+        if doodlopend[j][(k+1) % level_hoogte] == [j,k+1]:
+            aantalhekjes += 1
+        if aantalhekjes >= 3:
+            doodlopend[j][k] = [j,k]
+            doodlopend_2.append([j,k])
+            doodloopcheck(j-1,k)
+            doodloopcheck(j,k-1)
+
+j = 0
+while j < level_breedte:
+    k = 0
+    while k < level_hoogte:
+        doodloopcheck(j,k)
+        k += 1
+    j += 1
+#doodlopende paden bepalen            
+        
+f.write("\n" )
+f.write("Doodlopende vakjes:" + str(doodlopend_2))
 
 
-
-
-eetmodus = 0
 turn = -1
 while True:
+    
+    
     
     turn += 1
     
@@ -106,11 +145,6 @@ while True:
     f.write("\n")
     f.write("De posities zijn " + str(posities[turn]) + ", mijn positie is " + str(positie))
     
-    #scan voor deze beurt of er doodlopende paadjes zijn die eventueel door slangen zijn gemaakt
-    doodlopend_momenteel_lijst = []
-    doodlopend_momenteel_weergave = []
-    momenteel_doodloopcheck_veld(level_breedte, level_hoogte, level, positie, f)
-    
     #kijk voor deze beurt welke vakjes veilig zijn
     navigate = []
     
@@ -130,132 +164,46 @@ while True:
     posright[0] = (positie[0] + 1 + level_breedte)%level_breedte
     posright[1] = (positie[1] + level_hoogte)%level_hoogte
     
-    if eetmodus == 0:
+
+    f.write("\n")
+    f.write("Boven me zit vakje " + str(posup) + ", en dat is een " + str(level[posup[1]][posup[0]]))
+    if (level[posup[1]][posup[0]] == "." or level[posup[1]][posup[0]] == "x"):
         f.write("\n")
-        f.write("Boven me zit vakje " + str(posup) + ", en dat is een " + str(level[posup[1]][posup[0]]))
-        if (level[posup[1]][posup[0]] == "."):
-            f.write("\n")
-            f.write("Het is dus veilig om naar boven te gaan.")
-            navigate.append('u')
-        else:
-            f.write("\n")
-            f.write("Het is dus niet veilig om naar boven te gaan.")
-        
-        f.write("\n")
-        f.write("Onder me zit  vakje " + str(posdown) + ", en dat is een " + str(level[posdown[1]][posdown[0]]))
-        if (level[posdown[1]][posdown[0]] == "."):
-            f.write("\n")
-            f.write("Het is dus veilig om naar onder te gaan.")
-            navigate.append('d')
-        else:
-            f.write("\n")
-            f.write("Het is dus niet veilig om naar onder te gaan.")
-        
-        f.write("\n")
-        f.write("Links van me zit  vakje " + str(posleft) + ", en dat is een " + str(level[posleft[1]][posleft[0]]))
-        if (level[posleft[1]][posleft[0]] == "."):
-            f.write("\n")
-            f.write("Het is dus veilig om naar links te gaan.")
-            navigate.append('l')
-        else:
-            f.write("\n")
-            f.write("Het is dus niet veilig om naar links te gaan.")
-        
-        f.write("\n")
-        f.write("Rechts van me zit  vakje " + str(posright) + ", en dat is een " + str(level[posright[1]][posright[0]]))
-        if (level[posright[1]][posright[0]] == "."):
-            f.write("\n")
-            f.write("Het is dus veilig om naar rechts te gaan.")
-            navigate.append('r')
-        else:
-            f.write("\n")
-            f.write("Het is dus niet veilig om naar rechts te gaan.")
-            
-        if len(navigate) == 0:
-            f.write("\n")
-            f.write("Er zijn geen lege vakjes, als ik kan eten moet ik dat doen.")
-            eetmodus = 1
-            if (level[posup[1]][posup[0]] == "x"):
-                navigate.append('u')
-            if (level[posdown[1]][posdown[0]] == "x"):
-                navigate.append('d')
-            if (level[posleft[1]][posleft[0]] == "x"):
-                navigate.append('l')
-            if (level[posright[1]][posright[0]] == "x"):
-                navigate.append('r')
-            if len(navigate) == 0:
-                navigate.append('u')
-                navigate.append('d')
-                navigate.append('l')
-                navigate.append('r')
+        f.write("Het is dus veilig om naar boven te gaan.")
+        navigate.append('u')
     else:
-        xcount = 0
-        xnavigate = []
         f.write("\n")
-        f.write("Boven me zit vakje " + str(posup) + ", en dat is een " + str(level[posup[1]][posup[0]]))
-        if (level[posup[1]][posup[0]] == "x" or level[posup[1]][posup[0]] == "."):
-            if level[posup[1]][posup[0]] == "x":
-                xnavigate.append('u')
-                xcount += 1
-            f.write("\n")
-            f.write("Het is dus veilig om naar boven te gaan.")
-            navigate.append('u')
-        else:
-            f.write("\n")
-            f.write("Het is dus niet veilig om naar boven te gaan.")
-        
+        f.write("Het is dus niet veilig om naar boven te gaan.")
+    
+    f.write("\n")
+    f.write("Onder me zit  vakje " + str(posdown) + ", en dat is een " + str(level[posdown[1]][posdown[0]]))
+    if (level[posdown[1]][posdown[0]] == "." or level[posdown[1]][posdown[0]] == "x"):
         f.write("\n")
-        f.write("Onder me zit  vakje " + str(posdown) + ", en dat is een " + str(level[posdown[1]][posdown[0]]))
-        if (level[posdown[1]][posdown[0]] == "x" or level[posdown[1]][posdown[0]] == "."):
-            if level[posdown[1]][posdown[0]] == "x":
-                xnavigate.append('d')
-                xcount += 1
-            f.write("\n")
-            f.write("Het is dus veilig om naar onder te gaan.")
-            navigate.append('d')
-        else:
-            f.write("\n")
-            f.write("Het is dus niet veilig om naar onder te gaan.")
-        
+        f.write("Het is dus veilig om naar onder te gaan.")
+        navigate.append('d')
+    else:
         f.write("\n")
-        f.write("Links van me zit  vakje " + str(posleft) + ", en dat is een " + str(level[posleft[1]][posleft[0]]))
-        if (level[posleft[1]][posleft[0]] == "x" or level[posleft[1]][posleft[0]] == "."):
-            if level[posleft[1]][posleft[0]] == "x":
-                xnavigate.append('l')
-                xcount += 1
-            f.write("\n")
-            f.write("Het is dus veilig om naar links te gaan.")
-            navigate.append('l')
-        else:
-            f.write("\n")
-            f.write("Het is dus niet veilig om naar links te gaan.")
-        
+        f.write("Het is dus niet veilig om naar onder te gaan.")
+    
+    f.write("\n")
+    f.write("Links van me zit  vakje " + str(posleft) + ", en dat is een " + str(level[posleft[1]][posleft[0]]))
+    if (level[posleft[1]][posleft[0]] == "." or level[posleft[1]][posleft[0]] == "x"):
         f.write("\n")
-        f.write("Rechts van me zit  vakje " + str(posright) + ", en dat is een " + str(level[posright[1]][posright[0]]))
-        if (level[posright[1]][posright[0]] == "x" or level[posright[1]][posright[0]] == "."):
-            if level[posright[1]][posright[0]] == "x":
-                xnavigate.append('r')
-                xcount += 1
-            f.write("\n")
-            f.write("Het is dus veilig om naar rechts te gaan.")
-            navigate.append('r')
-        else:
-            f.write("\n")
-            f.write("Het is dus niet veilig om naar rechts te gaan.")
+        f.write("Het is dus veilig om naar links te gaan.")
+        navigate.append('l')
+    else:
         f.write("\n")
-        f.write("xcount is " + str(xcount))
-        if xcount > 0:
-            f.write("\n")
-            f.write("Er is eten, dus daar ga ik naar toe")
-            navigate = []
-            p = 0
-            while p < len(xnavigate):
-                navigate.append(xnavigate[p])
-                p += 1
-        else:
-            f.write("\n")
-            f.write("Er is geen eten, dus ik moet naar een leeg vakje als dat kan")
-        
+        f.write("Het is dus niet veilig om naar links te gaan.")
+    
+    f.write("\n")
+    f.write("Rechts van me zit  vakje " + str(posright) + ", en dat is een " + str(level[posright[1]][posright[0]]))
+    if (level[posright[1]][posright[0]] == "." or level[posright[1]][posright[0]] == "x"):
+        f.write("\n")
+        f.write("Het is dus veilig om naar rechts te gaan.")
+        navigate.append('r')
+    else:
+        f.write("\n")
+        f.write("Het is dus niet veilig om naar rechts te gaan.")
         
         if len(navigate) == 0:
             navigate.append('u')
@@ -371,8 +319,6 @@ while True:
         while h < level_hoogte:
             b = 0 
             while b < level_breedte:
-                if [b,h] in posities[turn][j]:
-                    level[h][b] = "."
                 if [b,h] in posities[turn + 1][j]:
                     level[h][b] = str(j)
                 b += 1
