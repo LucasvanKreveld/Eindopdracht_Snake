@@ -47,6 +47,9 @@ def permanent_doodloopcheck(j, k, level_breedte, level_hoogte, level): #check vo
             doodlopend_permanent.append([j,k])
             permanent_doodloopcheck((j-1) % level_breedte, k, level_breedte, level_hoogte, level)
             permanent_doodloopcheck(j, (k-1) % level_hoogte, level_breedte, level_hoogte, level)
+            permanent_doodloopcheck((j+1) % level_breedte, k, level_breedte, level_hoogte, level)
+            permanent_doodloopcheck(j, (k+1) % level_hoogte, level_breedte, level_hoogte, level)
+            
 
 #simpele permanente doodlopende paden bepalen  
 
@@ -114,5 +117,7 @@ def momenteel_doodloopcheck(j, k, level_hoogte, level_breedte, level, positie, f
             b.append([j,k])
             momenteel_doodloopcheck((j-1) % level_breedte, k, level_hoogte, level_breedte, level, positie, f, doodlopend_momenteel_weergave, doodlopend_momenteel_lijst)
             momenteel_doodloopcheck(j, (k-1) % level_hoogte, level_hoogte, level_breedte, level, positie ,f, doodlopend_momenteel_weergave, doodlopend_momenteel_lijst)
+            momenteel_doodloopcheck((j+1) % level_breedte, k, level_hoogte, level_breedte, level, positie, f, doodlopend_momenteel_weergave, doodlopend_momenteel_lijst)
+            momenteel_doodloopcheck(j, (k+1) % level_hoogte, level_hoogte, level_breedte, level, positie ,f, doodlopend_momenteel_weergave, doodlopend_momenteel_lijst)
             
 #momenteel doodlopende paden bepalen            
