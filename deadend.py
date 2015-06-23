@@ -34,15 +34,19 @@ def permanent_doodloopcheck(j, k, level_breedte, level_hoogte, level): #check vo
             if omgeving[l] == "#":
                 aantalhekjes += 1
             l += 1
-        if doodlopend[j-1][k] == [j-1,k]:
+        if doodlopend[(j-1) % level_breedte][k] == [(j-1) % level_breedte,k]:
             aantalhekjes += 1
-        if doodlopend[j][k-1] == [j,k-1]:
+        if doodlopend[j][(k-1) % level_hoogte] == [j,(k-1) % level_hoogte]:
+            aantalhekjes += 1
+        if doodlopend[(j+1) % level_breedte][k] == [(j+1) % level_breedte,k]:
+            aantalhekjes += 1
+        if doodlopend[j][(k+1) % level_hoogte] == [j,(k+1) % level_hoogte]:
             aantalhekjes += 1
         if aantalhekjes >= 3: #als er 3 of 4 hekjes of vakjes die doodlopend zijn omheen staan:
             doodlopend[j][k] = [j,k]
             doodlopend_permanent.append([j,k])
-            permanent_doodloopcheck(j-1, k, level_breedte, level_hoogte, level)
-            permanent_doodloopcheck(j, k-1, level_breedte, level_hoogte, level)
+            permanent_doodloopcheck((j-1) % level_breedte, k, level_breedte, level_hoogte, level)
+            permanent_doodloopcheck(j, (k-1) % level_hoogte, level_breedte, level_hoogte, level)
 
 #simpele permanente doodlopende paden bepalen  
 
@@ -96,19 +100,19 @@ def momenteel_doodloopcheck(j, k, level_hoogte, level_breedte, level, positie, f
             if omgeving_symbool[l] != "." and omgeving_symbool[l] != "x" and str(omgeving_coordinaten[l]) != str(positie):
                 aantal_obstakels += 1
             l += 1
-        if a[(j-1) % level_breedte][k] == [j-1,k]:
+        if a[(j-1) % level_breedte][k] == [(j-1) % level_breedte,k]:
             aantal_obstakels += 1
-        if a[j][(k-1) % level_hoogte] == [j,k-1]:
+        if a[j][(k-1) % level_hoogte] == [j,(k-1) % level_hoogte]:
             aantal_obstakels += 1
-        if a[(j+1) % level_breedte][k] == [j+1,k]:
+        if a[(j+1) % level_breedte][k] == [(j+1) % level_breedte,k]:
             aantal_obstakels += 1
-        if a[j][(k+1) % level_hoogte] == [j,k+1]:
+        if a[j][(k+1) % level_hoogte] == [j,(k+1) % level_hoogte]:
             aantal_obstakels += 1
         
         if aantal_obstakels >= 3:   #als er om het vakje heen 3 of 4 vakjes een hekje, slang of doodlopend paadje zijn:
             a[j][k] = [j,k]
             b.append([j,k])
-            momenteel_doodloopcheck(j-1, k, level_hoogte, level_breedte, level, positie, f, doodlopend_momenteel_weergave, doodlopend_momenteel_lijst)
-            momenteel_doodloopcheck(j, k-1, level_hoogte, level_breedte, level, positie ,f, doodlopend_momenteel_weergave, doodlopend_momenteel_lijst)
+            momenteel_doodloopcheck((j-1) % level_breedte, k, level_hoogte, level_breedte, level, positie, f, doodlopend_momenteel_weergave, doodlopend_momenteel_lijst)
+            momenteel_doodloopcheck(j, (k-1) % level_hoogte, level_hoogte, level_breedte, level, positie ,f, doodlopend_momenteel_weergave, doodlopend_momenteel_lijst)
             
 #momenteel doodlopende paden bepalen            
