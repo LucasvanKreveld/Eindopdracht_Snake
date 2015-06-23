@@ -22,8 +22,7 @@ def permanent_doodloopcheck_veld(j, k, level_breedte, level_hoogte, level, f):
             k += 1
         j += 1
           
-    f.write("\n" )
-    f.write("Permanent doodlopende vakjes:" + str(doodlopend_permanent)) #geef de permanent doodlopende vakjes weer in anno.txt
+    return doodlopend_permanent
 
 def permanent_doodloopcheck(j, k, level_breedte, level_hoogte, level): #check voor een vakje of het doodloopt
     if doodlopend[j][k] == 0 and level[k][j] != '#':
