@@ -60,8 +60,7 @@ def permanent_doodloopcheck(j, k, level_breedte, level_hoogte, level): #check vo
 
 #momenteel doodlopende paden bepalen
 
-doodlopend_momenteel_lijst = []
-doodlopend_momenteel_weergave = []
+
 
 def momenteel_doodloopcheck_veld(level_breedte, level_hoogte, level, positie, f): 
     doodlopend_momenteel_lijst = []
@@ -83,8 +82,7 @@ def momenteel_doodloopcheck_veld(level_breedte, level_hoogte, level, positie, f)
             k += 1
         j += 1
     
-    f.write("\n" )
-    f.write("Momenteel doodlopende vakjes:" + str(doodlopend_momenteel_weergave))   #geef de momenteel doodlopende vakjes weer in anno.txt
+    return doodlopend_momenteel_weergave
     
 
 def momenteel_doodloopcheck(j, k, level_hoogte, level_breedte, level, positie, f, doodlopend_momenteel_weergave, doodlopend_momenteel_lijst):   #check voor elk vakje of het dood loopt
