@@ -274,11 +274,16 @@ while True:
             posities[turn + 1][j][0] = copy.deepcopy(posities[turn][j][0])
         #hier zorgen we dat de dode slangen niet in de muur terecht komen/
         
-        
-        u = 2
-        while u <= lengtes[j]:
-            posities[turn + 1][j][u - 1] = copy.deepcopy(posities[turn][j][u - 2])
-            u += 1
+        if posities[turn + 1][j][0] == posities[turn][j][0]:
+            u = 2
+            while u <= lengtes[j]:
+                posities[turn + 1][j][u - 1] = copy.deepcopy(posities[turn][j][u - 1])
+                u += 1
+        else:
+            u = 2
+            while u <= lengtes[j]:
+                posities[turn + 1][j][u - 1] = copy.deepcopy(posities[turn][j][u - 2])
+                u += 1
         
 #        k = 1
 #        while k <= lengtes[j]:
