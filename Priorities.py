@@ -9,9 +9,9 @@ def Area(x,y):
     
 # Check1 is de functie die bepaalt of een bepaalde coördinaat toegangbaar is.       
 def Check1(x,y):
-    if level[y][x] == "#" or (level[y][x] != "." and level[y][x] != "x") :
+    if level[y][x] != "." and level[y][x] != "x" :
         return -10000
-    elif ([x,y] in doodlopend_permanent):
+    elif [x,y] in doodlopend_permanent:
         return -1000
     elif [x,y] in doodlopend_momenteel_weergave:
         return -100
