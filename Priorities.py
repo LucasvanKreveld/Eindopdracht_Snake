@@ -37,7 +37,7 @@ def Check3(x,y):
             Mark += 1
     return Mark
 
-def Check4(L,M):
+def Check4(L,Freespaces):
     checklist = []
     for [x,y] in L:
         area = Area([x,y][0] , [x,y][1])
@@ -47,9 +47,9 @@ def Check4(L,M):
     D=L.intersect(checklist)
     checklist.remove(D)
     if checklist == []:
-        return len(M)
+        return len(Freespaces)
     else:
-        M.append(checklist)
+        Freespaces.append(checklist)
         Check4(checklist)
     
 # Prior is de functie die aan de hand van de bovenstaande functies de coördinaat bepaald waar de slang de volgende beurt naar toe moet gaan.
@@ -57,7 +57,7 @@ def Prior(x,y):
     area = Area(x,y)
     rating = []
     for i in range(0,len(area)):
-        Mark = Check1(area[i][0] , area[i][1]) + Check2(area[i][0] , area[i][1]) + Check3(area[i][0] , area[i][1]) + Check4(area[i][0] , area[i][1])
+        Mark = Check1(area[i][0] , area[i][1]) + Check2(area[i][0] , area[i][1]) + Check3(area[i][0] , area[i][1]) + Check4([[area[i][0] , area[i][1]]],[])
         rating.append(Mark)
     maxelement = max(rating)
     return(area[rating.index(maxelement)])
