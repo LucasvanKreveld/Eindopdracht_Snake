@@ -2,9 +2,10 @@
 import random
 import copy
 from deadend import *
+import sys
 
 
-f = open("anno.txt", 'w')
+f = open("annopriori.txt", 'w')
 
 ###Initialisatie
 # We lezen het doolhof en beginposities in
@@ -75,6 +76,15 @@ doodlopend = []
 doodlopend_permanent = []
 permanent_doodloopcheck_veld(j, k, level_breedte, level_hoogte, level, f)
 
+# Dit programma levert de coördinaat voor de slang waar hij de volgende beurt het beste naar toe kan gaan.
+# Area is de functie die het gebied van 3x3 bepaalt met als middelpunt [x,y].
+def Area(x,y):
+    area=[]
+    area.append([(x-1) % level_breedte , y])
+    area.append([x , (y-1) % level_hoogte])
+    area.append([x , (y+1) % level_hoogte])
+    area.append([(x+1) % level_breedte , y])
+    return area
 
 # Check1 is de functie die bepaalt of een bepaalde coördinaat toegangbaar is.       
 def Check1(x,y):
@@ -100,11 +110,6 @@ def Check2(x,y):
 # Check3 is de functie die de hoeveelheid vrije coördinaten rond een bepaald punt bepaalt.
 def Check3(x,y):
     area = Area(x,y)
-    area.remove([x,y])
-    area.remove([(x + 1)% level_breedte, (y + 1)% level_hoogte])
-    area.remove([(x - 1)% level_breedte, (y + 1)% level_hoogte])
-    area.remove([(x + 1)% level_breedte, (y - 1)% level_hoogte])
-    area.remove([(x - 1)% level_breedte, (y - 1)% level_hoogte])
     Mark = 0
     for i in range(0,len(area)):
         if level[area[i][1]][area[i][0]] == ".":
@@ -113,20 +118,28 @@ def Check3(x,y):
             Mark += 1
     return Mark
 
+def Check4(L,Freespaces):
+    checklist = []
+    for i in range(0,len(L)):
+        area = Area(L[i][0] , L[i][1])
+        for j in range(0,len(area)):
+            if level[area[j][1]][area[j][0]]=='.' or level[area[j][1]][area[j][0]]=='x':
+                checklist.append(area[j])
+    D=L.intersect(checklist)
+    checklist.remove(D)
+    if checklist == []:
+        return len(Freespaces)
+    else:
+        Freespaces.append(checklist)
+        Check4(checklist)
+    
 # Prior is de functie die aan de hand van de bovenstaande functies de coördinaat bepaald waar de slang de volgende beurt naar toe moet gaan.
 def Prior(x,y):
     area = Area(x,y)
-    area.remove([x,y])
-    area.remove([(x + 1)% level_breedte, (y + 1)% level_hoogte])
-    area.remove([(x - 1)% level_breedte, (y + 1)% level_hoogte])
-    area.remove([(x + 1)% level_breedte, (y - 1)% level_hoogte])
-    area.remove([(x - 1)% level_breedte, (y - 1)% level_hoogte])
     rating = []
     for i in range(0,len(area)):
-        Mark = Check1(area[i][0] , area[i][1]) + Check2(area[i][0] , area[i][1]) + Check3(area[i][0] , area[i][1])
+        Mark = Check1(area[i][0] , area[i][1]) + Check2(area[i][0] , area[i][1]) + Check3(area[i][0] , area[i][1]) + Check4([[area[i][0] , area[i][1]]],[])
         rating.append(Mark)
-    f.write("\n")
-    f.write("Rating is " + str(rating))
     maxelement = max(rating)
     return(area[rating.index(maxelement)])
 
@@ -171,18 +184,6 @@ while True:
     
     f.write("\n")
     f.write("doodlopend_momenteel_lijst is " + str(momenteel_doodloopcheck_veld(level_breedte, level_hoogte, level, positie, f)))
-    
-    #prioriteiten
-    
-    # Dit programma levert de coördinaat voor de slang waar hij de volgende beurt het beste naar toe kan gaan.
-    # Area is de functie die het gebied van 3x3 bepaalt met als middelpunt [x,y].
-    def Area(x,y):
-        area=[]
-        for i in [-1,0,1]:
-            for j in [-1,0,1]:
-                area.append([(x+i) % level_breedte , (y+j) % level_hoogte])
-        #we krijgen: l,u,d,r
-        return area
         
 
     
@@ -310,4 +311,6 @@ while True:
         # Sla de voedsel positie op in een lijst en in het level
         voedsel_posities.append(voedsel_positie)
         level[voedsel_positie[1]][voedsel_positie[0]] = "x"
+        
+    sys.stdout.flush()
 
