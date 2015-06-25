@@ -121,24 +121,36 @@ def Check3(x,y):
 def Check4(L,Freespaces):
     checklist = []
     for i in range(0,len(L)):
-        area = Area(L[i][0] , L[i][1])
-        for j in range(0,len(area)):
-            if level[area[j][1]][area[j][0]]=='.' or level[area[j][1]][area[j][0]]=='x':
-                checklist.append(area[j])
-    D=L.intersect(checklist)
-    checklist.remove(D)
-    if checklist == []:
-        return len(Freespaces)
+        if level[L[i][1]][L[i][0]] == "." or level[L[i][1]][L[i][0]] == "x":
+            area = Area(L[i][0] , L[i][1])
+            for j in range(0,len(area)):
+                if level[area[j][1]][area[j][0]]=="." or level[area[j][1]][area[j][0]]=="x":
+                    if area[j] not in checklist and area[j] not in Freespaces and area[j] not in L:
+                        checklist.append(area[j])
+    new = []
+    for i in range(0,len(checklist)):
+        if checklist[i] not in Freespaces:
+            new.append(checklist[i])
+    print("new is", str(new),"\n","checklist is",str(checklist),"\n","Freespaces is",str(Freespaces) )
+    if new != []:
+        for i in range(0,len(new)):
+            Freespaces.append(new[i])
+        getal = Check4(new,Freespaces)
+        
+        return getal
     else:
-        Freespaces.append(checklist)
-        Check4(checklist)
+        print (int(len(Freespaces)))
+        getal = int(len(Freespaces))
+        return getal
     
 # Prior is de functie die aan de hand van de bovenstaande functies de coördinaat bepaald waar de slang de volgende beurt naar toe moet gaan.
 def Prior(x,y):
     area = Area(x,y)
+    print(str(area))
     rating = []
     for i in range(0,len(area)):
-        Mark = Check1(area[i][0] , area[i][1]) + Check2(area[i][0] , area[i][1]) + Check3(area[i][0] , area[i][1]) + Check4([[area[i][0] , area[i][1]]],[])
+        X=Check4([[area[i][0] , area[i][1]]] , [[area[i][0] , area[i][1]]])
+        Mark = Check1(area[i][0] , area[i][1]) + Check2(area[i][0] , area[i][1]) + Check3(area[i][0] , area[i][1]) + X
         rating.append(Mark)
     maxelement = max(rating)
     return(area[rating.index(maxelement)])
