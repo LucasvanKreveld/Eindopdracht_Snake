@@ -57,7 +57,7 @@ def Prior(x,y):
     area = Area(x,y)
     rating = []
     for i in range(0,len(area)):
-        Mark = Check1(area[i][0] , area[i][1]) + Check2(area[i][0] , area[i][1]) + Check3(area[i][0] , area[i][1])
+        Mark = Check1(area[i][0] , area[i][1]) + Check2(area[i][0] , area[i][1]) + Check3(area[i][0] , area[i][1]) + Check4(area[i][0] , area[i][1])
         rating.append(Mark)
     maxelement = max(rating)
     return(area[rating.index(maxelement)])
