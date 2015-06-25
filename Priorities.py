@@ -39,12 +39,15 @@ def Check3(x,y):
 
 def Check4(L,Freespaces):
     checklist = []
-    for [x,y] in L:
-        area = Area([x,y][0] , [x,y][1])
-        for [u,v] in area:
-            if level[[u,v][1]][[u,v][0]]=='.' or level[[u,v][1]][[u,v][0]]=='x':
+    D = []
+    for i in range(0,len(L)):
+        area = Area(L[i][0] , L[i][1])
+        for j in range(0,area):
+            if level[area[j][1]][area[j][0]]=='.' or level[area[j][1]][area[j][0]]=='x':
                 checklist.append([u,v])
-    D=L.intersect(checklist)
+    for i in range(0,len(L)):
+        if L[i] in checklist:
+            D.append(L[i])
     checklist.remove(D)
     if checklist == []:
         return len(Freespaces)
@@ -57,7 +60,7 @@ def Prior(x,y):
     area = Area(x,y)
     rating = []
     for i in range(0,len(area)):
-        Mark = Check1(area[i][0] , area[i][1]) + Check2(area[i][0] , area[i][1]) + Check3(area[i][0] , area[i][1]) + Check4([[area[i][0] , area[i][1]]],[])
+        Mark = Check1(area[i][0] , area[i][1]) + Check2(area[i][0] , area[i][1]) + Check3(area[i][0] , area[i][1]) + Check4([[area[i][0] , area[i][1]]] , [[area[i][0] , area[i][1]]])
         rating.append(Mark)
     maxelement = max(rating)
     return(area[rating.index(maxelement)])
