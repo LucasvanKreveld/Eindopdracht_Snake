@@ -294,7 +294,7 @@ def kortstepad_check(x, y, z, w):
     if [z,w] != kortpad[0]:
         return 0
     else:
-        return 10000
+        return 100
 
         
 # beste_zet is de functie die aan de hand van de bovenstaande functies de coördinaat bepaald waar de slang de volgende beurt naar toe moet gaan.
