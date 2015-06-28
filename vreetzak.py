@@ -108,24 +108,6 @@ def permuteer(a, b, d, e, x0, y0, horizontaal, verticaal):
     return comp
 
 def kortstepadzoeker(x1, y1, x2, y2):
-    horizontaal = 0
-    verticaal = 0
-    # if abs(x1 - x2) >= abs(x1 - x2 + level_breedte):
-    #     if abs(y1 - y2) >= abs(y1 - y2 + level_hoogte):
-    #         horizontaal = (x1 - x2)/(abs(x1 - x2))
-    #         verticaal = -(y1 - y2)/(abs(y1 - y2))
-    #     else: 
-    #         horizontaal = (x1 - x2)/(abs(x1 - x2))
-    #         verticaal = -(y1 - y2 + level_hoogte)/(abs(y1 - y2 + level_hoogte))
-    # else:
-    #     if abs(y1 - y2) >= abs(y1 - y2 + level_hoogte):
-    #         horizontaal = (x1 - x2 + level_breedte)/(abs(x1 - x2 + level_breedte))
-    #         verticaal = -(y1 - y2)/(abs(y1 - y2))
-    #     else:
-    #         horizontaal = (x1 - x2 + level_breedte)/(abs(x1 - x2 + level_breedte))
-    #         verticaal = -(y1 - y2 + level_hoogte)/(abs(y1 - y2 + level_hoogte))
-    x0 = copy.deepcopy(x1)
-    y0 = copy.deepcopy(y1)
     
     blabla = []
     if kortstepadzoekerhulp(x1, y1, x2, y2, -1, -1) != 'geen directe paden':
@@ -164,7 +146,6 @@ def kortstepadzoekerhulp(x1, y1, x2, y2, horizontaal, verticaal):
     n = 100
     while u < n:
         pad = permuteer(abs(x1 - x2), abs(y1 - y2), 'd', 'e', x0, y0, horizontaal, verticaal)
-        print(pad)
         o = 0
         while pad in paden:
             o += 1
@@ -179,7 +160,6 @@ def kortstepadzoekerhulp(x1, y1, x2, y2, horizontaal, verticaal):
         i = 0
         h = 0
         while i < len(pad):
-            print(levelcheck(pad[i]))
             if levelcheck(pad[i]) != '.' and levelcheck(pad[i]) != 'x':
                 h = 1
                 break
@@ -259,7 +239,7 @@ def vrije_coordinaten_check(x,y):
     #         omsingel_scores.append(scores[int(level[omsingel[j][1]][omsingel[j][0]])])
     #         j += 1
         
-    #     if max(omsingel_scores) < scores[speler_nummer]:
+    #     if max(omsingel_scores) > scores[speler_nummer]:
     #         Mark += 2
             
     return Mark
@@ -297,7 +277,8 @@ def kortstepad_check(x, y, z, w):
         k = 0
         while k < level_breedte:
             if level[j][k] == 'x':
-                etenscoordinaten.append([k,j])
+                if [k,j] not in momenteel_doodlopend_coordinaten:
+                    etenscoordinaten.append([k,j])
             k += 1
         j += 1
 
@@ -322,10 +303,12 @@ def kortstepad_check(x, y, z, w):
         return 0
     if eetmodus == 0:
         return 0
+    if zoekmodus == 0:
+        return 0
     if [z,w] != kortpad[0]:
         return 0
     else:
-        return 500
+        return 50
 
         
 # beste_zet is de functie die aan de hand van de bovenstaande functies de coördinaat bepaald waar de slang de volgende beurt naar toe moet gaan.
@@ -336,7 +319,9 @@ def beste_zet(x, y):
         X=doodlopend_lengte_check([[area[i][0] , area[i][1]]] , [[area[i][0] , area[i][1]]])
         Mark = muur_check(area[i][0], area[i][1]) + eten_check(area[i][0], area[i][1]) + vrije_coordinaten_check(area[i][0], area[i][1]) + X + kortstepad_check(x, y, area[i][0], area[i][1])
         rating.append(Mark)
+        print(str(area[i]) + " -> " + str(Mark))
     maxelement = max(rating)
+    print("maximale element is "+ str(area[rating.index(maxelement)]) + " -> " +str(maxelement))
     return(area[rating.index(maxelement)])
 
 #prioriteiten/
@@ -350,7 +335,7 @@ def afstand(x1,y1,x2,y2):
     return dz
 #functie die afstand tussen twee punten berekent\
 
-
+zoekmodus = 1
 eetmodus = 1
 tijdstap = -1
 while True:
