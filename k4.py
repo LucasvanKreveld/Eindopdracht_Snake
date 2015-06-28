@@ -110,40 +110,86 @@ def permuteer(a, b, d, e, x0, y0, horizontaal, verticaal):
 def kortstepadzoeker(x1, y1, x2, y2):
     horizontaal = 0
     verticaal = 0
-    if abs(x1 - x2) >= abs(x1 - x2 + level_breedte):
-        if abs(y1 - y2) >= abs(y1 - y2 + level_hoogte):
-            horizontaal = (x1 - x2)/(abs(x1 - x2))
-            verticaal = -(y1 - y2)/(abs(y1 - y2))
-        else: 
-            horizontaal = (x1 - x2)/(abs(x1 - x2))
-            verticaal = -(y1 - y2 + level_hoogte)/(abs(y1 - y2 + level_hoogte))
-    else:
-        if abs(y1 - y2) >= abs(y1 - y2 + level_hoogte):
-            horizontaal = (x1 - x2 + level_breedte)/(abs(x1 - x2 + level_breedte))
-            verticaal = -(y1 - y2)/(abs(y1 - y2))
-        else:
-            horizontaal = (x1 - x2 + level_breedte)/(abs(x1 - x2 + level_breedte))
-            verticaal = -(y1 - y2 + level_hoogte)/(abs(y1 - y2 + level_hoogte))
+    # if abs(x1 - x2) >= abs(x1 - x2 + level_breedte):
+    #     if abs(y1 - y2) >= abs(y1 - y2 + level_hoogte):
+    #         horizontaal = (x1 - x2)/(abs(x1 - x2))
+    #         verticaal = -(y1 - y2)/(abs(y1 - y2))
+    #     else: 
+    #         horizontaal = (x1 - x2)/(abs(x1 - x2))
+    #         verticaal = -(y1 - y2 + level_hoogte)/(abs(y1 - y2 + level_hoogte))
+    # else:
+    #     if abs(y1 - y2) >= abs(y1 - y2 + level_hoogte):
+    #         horizontaal = (x1 - x2 + level_breedte)/(abs(x1 - x2 + level_breedte))
+    #         verticaal = -(y1 - y2)/(abs(y1 - y2))
+    #     else:
+    #         horizontaal = (x1 - x2 + level_breedte)/(abs(x1 - x2 + level_breedte))
+    #         verticaal = -(y1 - y2 + level_hoogte)/(abs(y1 - y2 + level_hoogte))
     x0 = copy.deepcopy(x1)
     y0 = copy.deepcopy(y1)
     
+    blabla = []
+    if kortstepadzoekerhulp(x1, y1, x2, y2, -1, -1) != 'geen directe paden':
+        blabla.append(copy.deepcopy(kortstepadzoekerhulp(x1, y1, x2, y2, -1, -1)))
+    
+    if kortstepadzoekerhulp(x1, y1, x2, y2, -1, 1) != 'geen directe paden':
+        blabla.append(copy.deepcopy(kortstepadzoekerhulp(x1, y1, x2, y2, -1, 1)))
+    
+    if kortstepadzoekerhulp(x1, y1, x2, y2, 1, 1) != 'geen directe paden':
+        blabla.append(copy.deepcopy(kortstepadzoekerhulp(x1, y1, x2, y2, 1, 1)))
+    
+    if kortstepadzoekerhulp(x1, y1, x2, y2, 1, -1) != 'geen directe paden':
+        blabla.append(copy.deepcopy(kortstepadzoekerhulp(x1, y1, x2, y2, 1, -1)))
+    
+    if len(blabla) == 0:
+        return 'geen directe paden'
+    
+    else:
+        blablo = []
+        i = 0
+        while i < len(blabla):
+            blablo.append(len(blabla[i]))
+            i += 1
+    
+        j = blablo.index(min(blablo))
+        return blabla[j]
+    
+    
+def kortstepadzoekerhulp(x1, y1, x2, y2, horizontaal, verticaal):
+    x0 = copy.deepcopy(x1)
+    y0 = copy.deepcopy(y1)
+    paden = []
     m = 0
     u = 0
-    while u < 100:
+    q = 0
+    n = 100
+    while u < n:
         pad = permuteer(abs(x1 - x2), abs(y1 - y2), 'd', 'e', x0, y0, horizontaal, verticaal)
+        print(pad)
+        o = 0
+        while pad in paden:
+            o += 1
+            pad = permuteer(abs(x1 - x2), abs(y1 - y2), 'd', 'e', x0, y0, horizontaal, verticaal)
+            if o > 100:
+                q = 1
+                break
+        if q == 1:
+            pad = 'geen directe paden'
+            break
+        paden.append(copy.deepcopy(pad))
         i = 0
         h = 0
         while i < len(pad):
-            if pad[i] != '.' or pad[i] != 'x':
+            print(levelcheck(pad[i]))
+            if levelcheck(pad[i]) != '.' and levelcheck(pad[i]) != 'x':
                 h = 1
-                i = len(pad)
+                break
             i += 1
         if h == 1:
             u += 1
         else:
             m = 1
-            u = 100
-            
+            break
+    
     if m == 0:
         pad = 'geen directe paden'
     
@@ -201,20 +247,20 @@ def vrije_coordinaten_check(x,y):
         elif level[area[i][1]][area[i][0]] == "x" and eetmodus == 1:
             Mark += 2
 
-    omsingel = []
-    for i in range(0, len(area)):
-        if [area[i][0],area[i][1]] in slanghoofden:
-            omsingel.append([area[i][0],area[i][1]])
+    # omsingel = []
+    # for i in range(0, len(area)):
+    #     if [area[i][0],area[i][1]] in slanghoofden:
+    #         omsingel.append([area[i][0],area[i][1]])
     
-    omsingel_scores = []
-    if omsingel != []:
-        j = 0
-        while j < len(omsingel):
-            omsingel_scores.append(scores[int(level[omsingel[j][1]][omsingel[j][0]])])
-            j += 1
+    # omsingel_scores = []
+    # if omsingel != []:
+    #     j = 0
+    #     while j < len(omsingel):
+    #         omsingel_scores.append(scores[int(level[omsingel[j][1]][omsingel[j][0]])])
+    #         j += 1
         
-        if max(omsingel_scores) < scores[speler_nummer]:
-            Mark += 2
+    #     if max(omsingel_scores) < scores[speler_nummer]:
+    #         Mark += 2
             
     return Mark
 
