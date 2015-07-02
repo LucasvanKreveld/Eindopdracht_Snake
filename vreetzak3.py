@@ -6,8 +6,8 @@ import sys
 import math
 
 
-g = open("frequentie.txt", 'w')
-f = open("vreetzak2.txt", 'w')
+g = open("frequentie3.txt", 'w')
+f = open("vreetzak3.txt", 'w')
 
 
 ###Initialisatie
